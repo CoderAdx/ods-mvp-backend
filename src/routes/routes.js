@@ -8,6 +8,8 @@ const router = express.Router();
 // Rotas para usuários
 router.post('/users/register', userController.register);
 router.post('/users/login', userController.login);
+router.post('/users/verify-security-word', userController.verifySecurityWord);
+router.post('/users/reset-password', userController.resetPassword);
 
 // Rotas para gerenciamento de histórico de interações (interaction-history)
 router.post('/interaction-history', interactionHistoryController.saveInteraction);
