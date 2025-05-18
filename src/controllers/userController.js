@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import { userService } from '../services/userService.js';
 
 export const userController = {
@@ -34,13 +36,23 @@ export const userController = {
         return res.status(404).json({ error: 'Usuário não encontrado' });
       }
 
-      if (user.password !== password) {
+      // Compara a senha fornecida com o hash armazenado
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
         return res.status(401).json({ error: 'Senha incorreta' });
       }
+
+      // Gera o token JWT com o userId como payload
+      const token = jwt.sign(
+        { userId: user.id },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' } // Token expira em 1 hora
+      );
 
       res.status(200).json({
         message: 'Login bem-sucedido',
         userId: user.id,
+        token: token // Retorna o token para o frontend
       });
     } catch (error) {
       res.status(400).json({ error: error.message });

@@ -53,4 +53,17 @@ export const goalService = {
       throw new Error(`Erro ao deletar meta: ${error.message}`);
     }
   },
+
+  //Buscar uma meta específica pelo ID
+  async getGoalById(goalId) {
+  try {
+    const [rows] = await pool.query(
+      'SELECT id, user_id FROM goals WHERE id = ?',
+      [goalId]
+    );
+    return rows[0];
+  } catch (error) {
+    throw new Error(`Erro ao buscar meta: ${error.message}`);
+  }
+}
 };
